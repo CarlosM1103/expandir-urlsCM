@@ -14,11 +14,17 @@ import java.nio.file.Files;
  */
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         var path = Path.of(
                 "C:/Users/SALASC/Downloads/urls.csv"
         );
-
+        var allData = Files.readAllLines(path);
+        for(var line: allData) {
+            new Thread(() ->
+              URLExpanderTask.expand(line).ifPresent(System.out::println)
+            ).start();
+        }
+        /*
         try (var lines = Files.lines(path)) {
             lines
                     .filter(line -> !line.isBlank()) // Eliminar urls vacías list<string>
@@ -28,7 +34,7 @@ public class App {
                     .map(Optional::get) //
                     .forEach(System.out::println); //
         } catch (IOException _) {}
-
+        */
         /* URLExpanderTask urlExpanderTask = new URLExpanderTask();
         Optional<String> expandedUrl = urlExpanderTask.expand("https://t.co/TGqER33gn7");
         expandedUrl.ifPresentOrElse(
